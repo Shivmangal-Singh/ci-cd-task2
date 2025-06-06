@@ -20,10 +20,10 @@ jobs:
           echo -n "verifying images:"
           docker images
     - name: Deploy to minikube
-      run:
+      run: |
         kubectl apply -f k8s-node-app.yaml
+        kubectl wait --for=condition=ready pod -l app=nodejs-app --timeout=60s
     - name: Test service URLs
       run: |
-          kubectl get pods -A
           minikube service list
           minikube service nodejs-app --url
